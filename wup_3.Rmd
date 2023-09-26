@@ -14,7 +14,7 @@ require(tidyverse)
 require(tigerstats)
 davisdata <- read.csv(file="UCDavis.csv")
 ```
-## Our Goal is to answer this question Is there a difference between the alcohol consumed between the row you choose to sit in??
+## Our Goal is to answer this question ?Is there a difference between the alcohol consumed between the row you choose to sit in?
 
 # Introduction 
 
@@ -24,8 +24,14 @@ $H_0$ There are no different in the alcohol  consumed  based on  the row you sit
 $H_A$ There is different  in the alcohol consumed base on  the row you sit in 
 
 
+# Method
 
-## Now with ggplot - first select the basic data
+The response  variable is numerical and the explan variable is categorical . Therefore we use numerical ~ cat 
+
+## Result 
+## Graphicle Results 
+
+### Now with ggplot - first select  the basic data
 
 ```{r}
 basicCN <- ggplot(davisdata,aes(y=alcohol,x=Seat))
@@ -36,6 +42,7 @@ basicCN <- ggplot(davisdata,aes(y=alcohol,x=Seat))
 basicCN + geom_boxplot()
 ```
   
+  This box pot shows the amount of alcohol consumed by the seating position. The back seat consumes more than the front and middle seats. The front and middle seats consume the same or very little difference.
   
 ### get fancy  
 
@@ -43,10 +50,30 @@ basicCN + geom_boxplot()
 basicCN + geom_boxplot(notch=TRUE,outlier.color = "red") + stat_boxplot(geom ='errorbar') + labs(title="Fancy notch boxplot \n with 2 lines")
 ```
 
+The graph shows the amount os alcohol consumed base on where you sit. The back seat people consume more alcohol than the people who sit in the front and middle. The middle consumes more than the people who sit in the front.
+
 ## Numerical Summarys 
+
+```{r}
+favstats(alcohol~Seat,data=davisdata)
+```
+This data shows the mean and median of alcohol consumed. It also shows how they drink by each quater. The people in the back drink way mor than people in front and middle.
 
 ## Inferential Tests
 
-## Conclusions
+```{r}
+model1 <- aov(alcohol~Seat,data=davisdata)
+summary.aov(model1)
+```
+The P value is 0.000116 is less than 0.05 . The P value is smaller so therefore we do reject  the null hypothesis.This mean that there is difference in alcoho consumption based on where they seat
 
+```{r}
+plot(TukeyHSD(model1))
+```
+
+
+We don't have evidence that there is a difference in the alcohol consumption between the middle and front rows. The only difference we found is back row consumes more than the middle and front seat. 
+
+## Conclusions
+Is there a difference between the alcohol consumed between the row you choose to sit in? Yes there is a difference between the alcohol consumed by the row you sit. The back row consumes by the row you sit it. Based on the data the back row consumes more alcohol than the people who sit in the front and middle row. The P is 0.000116, which is smaller than 0.05 T will reject  the null hypothesis. Therefore the back row people consume more alcohol.
 
